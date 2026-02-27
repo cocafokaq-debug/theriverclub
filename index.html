@@ -19,6 +19,94 @@
     <!-- Подключаем Flatpickr для красивого календаря -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <style>
+    /* Стили для календаря - светлая тема */
+    .flatpickr-calendar {
+        background: #ffffff !important;
+        border: 1px solid #dddddd !important;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
+        border-radius: 12px !important;
+        font-family: 'Roboto', sans-serif !important;
+    }
+    
+    .flatpickr-months {
+        background: var(--red-primary) !important;
+        border-radius: 12px 12px 0 0 !important;
+    }
+    
+    .flatpickr-month {
+        color: white !important;
+        fill: white !important;
+    }
+    
+    .flatpickr-weekdays {
+        background: #f5f5f5 !important;
+    }
+    
+    .flatpickr-weekday {
+        color: var(--red-primary) !important;
+        font-weight: 500 !important;
+    }
+    
+    .flatpickr-day {
+        color: #333333 !important;
+        font-weight: 400 !important;
+    }
+    
+    .flatpickr-day:hover {
+        background: #f0f0f0 !important;
+        border-color: #dddddd !important;
+    }
+    
+    .flatpickr-day.selected {
+        background: var(--red-primary) !important;
+        border-color: var(--red-primary) !important;
+        color: white !important;
+        font-weight: 500 !important;
+    }
+    
+    .flatpickr-day.today {
+        border-color: var(--red-primary) !important;
+        background: rgba(211, 47, 47, 0.1) !important;
+    }
+    
+    .flatpickr-day.disabled {
+        color: #cccccc !important;
+    }
+    
+    .flatpickr-prev-month, .flatpickr-next-month {
+        fill: white !important;
+    }
+    
+    .flatpickr-time {
+        background: white !important;
+        border-top: 1px solid #dddddd !important;
+    }
+    
+    .flatpickr-time input {
+        color: #333333 !important;
+    }
+    
+    /* Стили для поля ввода даты */
+    #datePicker {
+        background: var(--card-bg) !important;
+        border: 1px solid var(--border-color) !important;
+        border-radius: 12px !important;
+        padding: 15px !important;
+        color: var(--text-light) !important;
+        font-size: 16px !important;
+        width: 100% !important;
+    }
+    
+    #datePicker::placeholder {
+        color: var(--text-gray) !important;
+    }
+    
+    #datePicker:focus {
+        outline: none !important;
+        border-color: var(--red-primary) !important;
+    }
+</style>
     
     <style>
         /* ========== ОСНОВНЫЕ ПЕРЕМЕННЫЕ ========== */
