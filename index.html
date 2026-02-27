@@ -595,7 +595,7 @@
             color: var(--accent-gold);
         }
 
-        /* Модальное окно календаря */
+        /* Модальное окно календаря - ИСПРАВЛЕНО */
         .modal {
             display: none;
             position: fixed;
@@ -607,24 +607,28 @@
             z-index: 2000;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 16px;
+            overflow-y: auto;
         }
         .modal.active {
             display: flex;
         }
         .modal-content {
             background: var(--bg-secondary);
-            border-radius: 32px;
-            padding: 24px;
-            max-width: 400px;
+            border-radius: 28px;
+            padding: 20px 16px;
+            max-width: 380px;
             width: 100%;
             border: 1px solid var(--accent-gold);
+            margin: auto;
+            max-height: 90vh;
+            overflow-y: auto;
         }
         .modal-title {
             font-family: 'Playfair Display', serif;
-            font-size: 24px;
+            font-size: 22px;
             text-align: center;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             color: var(--accent-gold);
         }
 
@@ -633,24 +637,28 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
+            flex-shrink: 0;
         }
         .week-nav-btn {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             border: 1px solid var(--border-color);
             background: var(--bg-card);
             color: var(--text-primary);
             cursor: pointer;
             transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .week-nav-btn:hover {
             border-color: var(--accent-gold);
             color: var(--accent-gold);
         }
         .week-title {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 500;
             color: var(--accent-gold);
         }
@@ -658,26 +666,28 @@
         .week-days {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 8px;
-            margin-bottom: 24px;
+            gap: 4px;
+            margin-bottom: 16px;
+            flex-shrink: 0;
         }
         .calendar-day {
             aspect-ratio: 1;
             background: var(--bg-card);
-            border-radius: 16px;
+            border-radius: 12px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             border: 1px solid var(--border-color);
-            transition: all 0.3s;
+            transition: all 0.2s;
+            padding: 6px 2px;
+            min-width: 0;
             position: relative;
-            padding: 8px 4px;
         }
         .calendar-day:hover {
             border-color: var(--accent-gold);
-            transform: translateY(-2px);
+            transform: translateY(-1px);
         }
         .calendar-day.selected {
             border: 2px solid var(--accent-gold);
@@ -686,49 +696,53 @@
         .calendar-day.has-tournament::after {
             content: '';
             position: absolute;
-            top: 4px;
-            right: 4px;
-            width: 6px;
-            height: 6px;
+            top: 3px;
+            right: 3px;
+            width: 5px;
+            height: 5px;
             border-radius: 50%;
             background: var(--accent-gold);
         }
         .day-name {
-            font-size: 11px;
+            font-size: 10px;
             color: var(--text-muted);
-            margin-bottom: 4px;
-        }
-        .day-number {
-            font-size: 18px;
-            font-weight: 600;
             margin-bottom: 2px;
         }
+        .day-number {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 1px;
+        }
         .day-month {
-            font-size: 9px;
+            font-size: 8px;
             color: var(--text-muted);
         }
 
         .tournament-badge {
             background: var(--gradient-gold);
             color: var(--bg-primary);
-            padding: 12px;
-            border-radius: 12px;
+            padding: 14px;
+            border-radius: 14px;
             text-align: center;
-            margin-bottom: 24px;
+            margin-bottom: 16px;
             font-weight: 500;
+            font-size: 13px;
+            line-height: 1.4;
+            flex-shrink: 0;
         }
 
         .modal-buttons {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-top: 20px;
+            gap: 10px;
+            margin-top: 8px;
+            flex-shrink: 0;
         }
         .modal-btn {
-            padding: 16px;
+            padding: 14px;
             border: none;
-            border-radius: 16px;
-            font-size: 16px;
+            border-radius: 14px;
+            font-size: 15px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.3s;
@@ -798,25 +812,10 @@
             to { transform: translateY(0); opacity: 1; }
         }
 
-        /* Подсказка достижения */
-        .achievement-tooltip {
-            position: fixed;
-            background: var(--bg-secondary);
-            border: 1px solid var(--accent-gold);
-            border-radius: 16px;
-            padding: 16px;
-            max-width: 250px;
-            z-index: 4000;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        @media (max-width: 380px) {
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .achievements-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+        .loading-spinner {
+            text-align: center;
+            padding: 20px;
+            color: var(--accent-gold);
         }
     </style>
 </head>
@@ -1089,17 +1088,23 @@
         <div class="modal-content">
             <h2 class="modal-title">Запись на игру</h2>
             
-            <div class="week-navigation">
-                <button class="week-nav-btn" onclick="changeWeek(-1)">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <span class="week-title" id="weekTitle"></span>
-                <button class="week-nav-btn" onclick="changeWeek(1)">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
+            <div class="loading-spinner" id="calendarLoading" style="display: none;">
+                <i class="fas fa-spinner fa-spin"></i> Загрузка...
             </div>
             
-            <div class="week-days" id="weekDays"></div>
+            <div id="calendarContainer">
+                <div class="week-navigation">
+                    <button class="week-nav-btn" onclick="changeWeek(-1)">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <span class="week-title" id="weekTitle"></span>
+                    <button class="week-nav-btn" onclick="changeWeek(1)">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                
+                <div class="week-days" id="weekDays"></div>
+            </div>
             
             <div id="tournamentBadge" class="tournament-badge" style="display: none;"></div>
             
@@ -1155,14 +1160,52 @@
             { icon: 'fas fa-star', title: 'Легенда', desc: '50 игр', requirement: 'Примите участие в 50 турнирах' }
         ];
 
-        // Турниры
-        const tournaments = {
-            '2026-03-15': { type: 'Турнир по спортивному покеру', time: '19:00' },
-            '2026-03-18': { type: 'Турнир по спортивному покеру', time: '19:00' },
-            '2026-03-20': { type: 'Турнир по спортивному покеру', time: '19:00' },
-            '2026-03-22': { type: 'Турнир по спортивному покеру', time: '19:00' },
-            '2026-03-25': { type: 'Турнир по спортивному покеру', time: '19:00' }
-        };
+        // ===== ПОДКЛЮЧЕНИЕ К GOOGLE ТАБЛИЦЕ =====
+        // ЗДЕСЬ НУЖНО БУДЕТ ВСТАВИТЬ ССЫЛКУ НА ТВОЮ ТАБЛИЦУ
+        const GOOGLE_SHEETS_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR7ial7s5UOFQR2f2Y6O43a5goVFpIe8YNIEcH6JJ_u06NMqwR62N3fySqcRMgFO__F4I-WPcCkXbsa/pub?output=csv';
+        
+        let tournaments = {}; // Пустой объект, заполнится из Google
+
+        // Загрузка турниров из Google Sheets
+        async function loadTournamentsFromGoogle() {
+            if (!GOOGLE_SHEETS_URL) {
+                console.log('Google Sheets не подключен, использую тестовые данные');
+                // Тестовые данные пока нет Google Sheets
+                tournaments = {
+                    '2026-03-15': { type: 'Турнир по спортивному покеру', time: '19:00' },
+                    '2026-03-18': { type: 'Турнир по спортивному покеру', time: '19:00' },
+                    '2026-03-20': { type: 'Турнир по спортивному покеру', time: '19:00' },
+                    '2026-03-22': { type: 'Турнир по спортивному покеру', time: '19:00' },
+                    '2026-03-25': { type: 'Турнир по спортивному покеру', time: '19:00' }
+                };
+                renderCalendar();
+                return;
+            }
+
+            try {
+                document.getElementById('calendarLoading').style.display = 'block';
+                
+                // Здесь будет запрос к Google Sheets
+                // Пока используем тестовые данные
+                setTimeout(() => {
+                    tournaments = {
+                        '2026-03-15': { type: 'Турнир по спортивному покеру', time: '19:00' },
+                        '2026-03-18': { type: 'Турнир по спортивному покеру', time: '19:00' },
+                        '2026-03-20': { type: 'Турнир по спортивному покеру', time: '19:00' },
+                        '2026-03-22': { type: 'Турнир по спортивному покеру', time: '19:00' },
+                        '2026-03-25': { type: 'Турнир по спортивному покеру', time: '19:00' }
+                    };
+                    
+                    document.getElementById('calendarLoading').style.display = 'none';
+                    renderCalendar();
+                }, 500);
+                
+            } catch (error) {
+                console.error('Ошибка загрузки турниров:', error);
+                document.getElementById('calendarLoading').style.display = 'none';
+                showNotification('Ошибка загрузки расписания');
+            }
+        }
 
         // Навигация
         const pages = {
@@ -1212,14 +1255,18 @@
             const week = [];
             const first = date.getDate() - date.getDay() + (date.getDay() === 0 ? -6 : 1);
             for (let i = 0; i < 7; i++) {
-                const day = new Date(date.setDate(first + i));
+                const day = new Date(date);
+                day.setDate(first + i);
                 week.push(new Date(day));
             }
             return week;
         }
 
         function formatDate(date) {
-            return date.toISOString().split('T')[0];
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
         }
 
         function getDayName(date) {
@@ -1292,9 +1339,7 @@
             document.getElementById('registerModal').classList.add('active');
             currentDate = new Date();
             selectedDate = null;
-            renderCalendar();
-            document.getElementById('tournamentBadge').style.display = 'none';
-            document.getElementById('confirmBtn').style.display = 'none';
+            loadTournamentsFromGoogle(); // Загружаем турниры при открытии
         };
 
         window.closeModal = function() {
@@ -1313,7 +1358,11 @@
             }
             
             const registrations = JSON.parse(localStorage.getItem('registrations') || '[]');
-            registrations.push({ date: selectedDate, timestamp: new Date().toISOString() });
+            registrations.push({ 
+                date: selectedDate, 
+                timestamp: new Date().toISOString(),
+                userId: tg.initDataUnsafe?.user?.id 
+            });
             localStorage.setItem('registrations', JSON.stringify(registrations));
             
             closeModal();
