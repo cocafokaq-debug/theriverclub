@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>The River Poker Club</title>
+    
+    <!-- Подключаем Telegram Web App SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    
+    <!-- Подключаем шрифты -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Подключаем Font Awesome для иконок -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Подключаем стили -->
+    <style>
+        /* ========== ОСНОВНЫЕ ПЕРЕМЕННЫЕ ========== */
+        :root {
+            --dark-bg: #1a1a1a;
+            --dark-secondary: #2d2d2d;
+            --red-primary: #8B0000;
+            --red-dark: #5C0000;
+            --gold-primary: #C5A028;
+            --gold-light: #D4AF37;
+            --gold-dark: #9E7B1A;
+            --text-light: #ffffff;
+            --text-gray: #b0b0b0;
+            --border-color: #3d3d3d;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            min-height: 100vh;
+            position: relative;
+            padding-bottom: 70px; /* Отступ под нижнее меню */
+        }
+        
+        /* Стилизация скролла */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--dark-secondary);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--gold-primary);
+            border-radius: 3px;
+        }
+        
+        /* ========== ЭКРАН ОФЕРТЫ ========== */
+        .offer-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #000000 100%);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            transition: opacity 0.5s ease;
+        }
+        
+        .offer-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .offer-card {
+            background: var(--dark-secondary);
+            border-radius: 20px;
+            padding: 30px 20px;
+            max-width: 400px;
+            width: 100%;
+            border: 1px solid var(--gold-primary);
+            box-shadow: 0 10px 30px rgba(197, 160, 40, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .offer-card::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: -50px;
+            width: 200px;
+            height: 200px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="%23C5A028" opacity="0.1"><circle cx="50" cy="50" r="50"/></svg>');
+            background-size: cover;
+            transform: rotate(15deg);
+        }
+        
+        .offer-logo {
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .offer-logo i {
+            font-size: 60px;
+            color: var(--gold-primary);
+            margin-bottom: 10px;
+        }
+        
+        .offer-logo h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            color: var(--gold-primary);
+            letter-spacing: 2px;
+        }
+        
+        .offer-logo p {
+            color: var(--text-gray);
+            font-size: 14px;
+        }
+        
+        .offer-text {
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            margin: 20px 0;
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-gray);
+        }
+        
+        .offer-text h3 {
+            color: var(--gold-primary);
+            margin-bottom: 10px;
+        }
+        
+        .offer-text ul {
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+        
+        .accept-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, var(--gold-dark), var(--gold-primary));
+            border: none;
+            border-radius: 10px;
+            color: var(--dark-bg);
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .accept-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(197, 160, 40, 0.4);
+        }
+        
+        .accept-btn:active {
+            transform: translateY(0);
+        }
+        
+        /* ========== ОСНОВНОЙ КОНТЕЙНЕР ========== */
+        .main-container {
+            display: none;
+            min-height: 100vh;
+        }
+        
+        .main-container.visible {
+            display: block;
+        }
+        
+        /* ========== ШАПКА ========== */
+        .header {
+            background: linear-gradient(180deg, var(--dark-secondary) 0%, var(--dark-bg) 100%);
+            padding: 20px 15px 15px;
+            border-bottom: 2px solid var(--gold-primary);
+            position: relative;
+        }
+        
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold-primary), transparent);
+        }
+        
+        .club-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            color: var(--gold-primary);
+            text-align: center;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(197, 160, 40, 0.3);
+        }
+        
+        .club-subname {
+            text-align: center;
+            color: var(--text-gray);
+            font-size: 12px;
+            letter-spacing: 2px;
+        }
+        
+        /* ========== ОСНОВНОЙ КОНТЕНТ ========== */
+        .content {
+            padding: 20px 15px 80px;
+        }
+        
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* ========== ГЛАВНАЯ СТРАНИЦА ========== */
+        .main-menu-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .menu-card {
+            background: var(--dark-secondary);
+            border-radius: 15px;
+            padding: 20px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .menu-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(197, 160, 40, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .menu-card:hover::before {
+            opacity: 1;
+        }
+        
+        .menu-card i {
+            font-size: 40px;
+            color: var(--gold-primary);
+            margin-bottom: 10px;
+        }
+        
+        .menu-card span {
+            display: block;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .menu-card .card-desc {
+            font-size: 12px;
+            color: var(--text-gray);
+            margin-top: 5px;
+        }
+        
+        .menu-card.highlight {
+            border: 2px solid var(--gold-primary);
+            background: linear-gradient(45deg, var(--dark-secondary), #3d2a0f);
+        }
+        
+        .rating-preview {
+            grid-column: span 2;
+            background: var(--dark-secondary);
+            border-radius: 15px;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid var(--gold-primary);
+        }
+        
+        .rating-preview h3 {
+            color: var(--gold-primary);
+            margin-bottom: 10px;
+        }
+        
+        .top-player {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+        }
+        
+        .top-player .position {
+            width: 30px;
+            height: 30px;
+            background: var(--gold-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--dark-bg);
+            margin-right: 10px;
+        }
+        
+        .top-player .name {
+            flex: 1;
+        }
+        
+        .top-player .score {
+            color: var(--gold-primary);
+            font-weight: bold;
+        }
+        
+        /* ========== СТРАНИЦА РЕЙТИНГА ========== */
+        .rating-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .rating-header h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--gold-primary);
+            font-size: 24px;
+        }
+        
+        .rating-list {
+            background: var(--dark-secondary);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        
+        .rating-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.3s ease;
+        }
+        
+        .rating-item:hover {
+            background: rgba(197, 160, 40, 0.1);
+        }
+        
+        .rating-item:last-child {
+            border-bottom: none;
+        }
+        
+        .rating-item .rank {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        
+        .rating-item .rank.gold {
+            background: var(--gold-primary);
+            color: var(--dark-bg);
+        }
+        
+        .rating-item .rank.silver {
+            background: #C0C0C0;
+            color: var(--dark-bg);
+        }
+        
+        .rating-item .rank.bronze {
+            background: #CD7F32;
+            color: var(--dark-bg);
+        }
+        
+        .rating-item .player-info {
+            flex: 1;
+        }
+        
+        .rating-item .player-name {
+            font-weight: 500;
+        }
+        
+        .rating-item .player-stats {
+            font-size: 12px;
+            color: var(--text-gray);
+        }
+        
+        .rating-item .player-points {
+            color: var(--gold-primary);
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        /* ========== СТРАНИЦА ПРОФИЛЯ ========== */
+        .profile-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 3px solid var(--gold-primary);
+            object-fit: cover;
+        }
+        
+        .avatar-overlay {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 35px;
+            height: 35px;
+            background: var(--gold-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark-bg);
+            border: 2px solid var(--dark-secondary);
+        }
+        
+        .profile-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .profile-nickname {
+            color: var(--gold-primary);
+            font-size: 16px;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+        
+        .profile-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 25px 0;
+        }
+        
+        .stat-card {
+            background: var(--dark-secondary);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+        
+        .stat-card .value {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--gold-primary);
+        }
+        
+        .stat-card .label {
+            font-size: 12px;
+            color: var(--text-gray);
+        }
+        
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            color: var(--gold-primary);
+            margin: 25px 0 15px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .history-list {
+            background: var(--dark-secondary);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .history-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .history-item:last-child {
+            border-bottom: none;
+        }
+        
+        .history-item .date {
+            font-size: 14px;
+            color: var(--text-gray);
+            width: 80px;
+        }
+        
+        .history-item .game {
+            flex: 1;
+        }
+        
+        .history-item .result {
+            font-weight: bold;
+        }
+        
+        .history-item .result.win {
+            color: #4CAF50;
+        }
+        
+        .history-item .result.lose {
+            color: var(--red-primary);
+        }
+        
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        
+        .achievement {
+            text-align: center;
+        }
+        
+        .achievement i {
+            font-size: 30px;
+            color: var(--gold-primary);
+            margin-bottom: 5px;
+        }
+        
+        .achievement span {
+            font-size: 12px;
+            color: var(--text-gray);
+        }
+        
+        /* ========== НИЖНЕЕ МЕНЮ ========== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: var(--dark-secondary);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            border-top: 2px solid var(--gold-primary);
+            z-index: 100;
+        }
+        
+        .nav-item {
+            flex: 1;
+            text-align: center;
+            color: var(--text-gray);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 5px;
+        }
+        
+        .nav-item i {
+            font-size: 24px;
+            display: block;
+            margin-bottom: 3px;
+        }
+        
+        .nav-item span {
+            font-size: 12px;
+        }
+        
+        .nav-item.active {
+            color: var(--gold-primary);
+        }
+        
+        /* ========== МОДАЛЬНЫЕ ОКНА ========== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: var(--dark-secondary);
+            border-radius: 20px;
+            padding: 25px;
+            max-width: 400px;
+            width: 100%;
+            border: 1px solid var(--gold-primary);
+        }
+        
+        .modal-title {
+            color: var(--gold-primary);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--text-gray);
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            background: var(--dark-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-light);
+            font-size: 16px;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--gold-primary);
+        }
+        
+        .modal-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .modal-btn {
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-btn.primary {
+            background: var(--gold-primary);
+            color: var(--dark-bg);
+        }
+        
+        .modal-btn.secondary {
+            background: var(--dark-bg);
+            color: var(--text-light);
+            border: 1px solid var(--border-color);
+        }
+        
+        /* ========== УВЕДОМЛЕНИЯ ========== */
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            left: 20px;
+            right: 20px;
+            background: var(--dark-secondary);
+            border-left: 4px solid var(--gold-primary);
+            border-radius: 8px;
+            padding: 15px;
+            color: var(--text-light);
+            z-index: 3000;
+            display: none;
+            animation: slideUp 0.3s ease;
+        }
+        
+        .toast.show {
+            display: block;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        /* ========== АДАПТАЦИЯ ========== */
+        @media (max-width: 380px) {
+            .main-menu-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .rating-preview {
+                grid-column: span 1;
+            }
+            
+            .achievements-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Экран оферты -->
+    <div class="offer-screen" id="offerScreen">
+        <div class="offer-card">
+            <div class="offer-logo">
+                <i class="fas fa-dragon"></i>
+                <h1>THE RIVER</h1>
+                <p>Poker Club</p>
+            </div>
+            
+            <div class="offer-text">
+                <h3>Публичная оферта</h3>
+                <p>Настоящая оферта является официальным предложением Poker Club "The River" заключить договор на следующих условиях:</p>
+                
+                <h4>1. Общие положения</h4>
+                <p>1.1. Посещая клуб, вы соглашаетесь с правилами поведения и игровым этикетом.</p>
+                <p>1.2. Возраст посетителей должен быть не менее 18 лет.</p>
+                
+                <h4>2. Правила игры</h4>
+                <p>2.1. Все игры проводятся по международным правилам покера.</p>
+                <p>2.2. Решения дилера являются окончательными.</p>
+                
+                <h4>3. Конфиденциальность</h4>
+                <p>3.1. Клуб гарантирует сохранность персональных данных.</p>
+                <p>3.2. Фото- и видеосъемка возможна только с разрешения администрации.</p>
+                
+                <h4>4. Ответственность</h4>
+                <p>4.1. Клуб не несет ответственности за личные вещи игроков.</p>
+                <p>4.2. Администрация имеет право отказать в посещении без объяснения причин.</p>
+                
+                <p style="margin-top: 15px; color: var(--gold-primary);">Нажимая "Принять", вы подтверждаете согласие со всеми условиями.</p>
+            </div>
+            
+            <button class="accept-btn" id="acceptOffer">
+                ПРИНЯТЬ <i class="fas fa-check-circle" style="margin-left: 10px;"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Основной контейнер приложения -->
+    <div class="main-container" id="mainContainer">
+        <!-- Шапка -->
+        <div class="header">
+            <div class="club-name">THE RIVER</div>
+            <div class="club-subname">POKER CLUB</div>
+        </div>
+
+        <!-- Контент -->
+        <div class="content">
+            <!-- Страница Главная -->
+            <div class="page active" id="homePage">
+                <div class="main-menu-grid">
+                    <div class="menu-card highlight" onclick="openRegistration()">
+                        <i class="fas fa-calendar-check"></i>
+                        <span>Записаться на игру</span>
+                        <span class="card-desc">Ближайшая игра сегодня</span>
+                    </div>
+                    
+                    <div class="menu-card" onclick="showRating()">
+                        <i class="fas fa-trophy"></i>
+                        <span>Рейтинг</span>
+                        <span class="card-desc">Турнирная таблица</span>
+                    </div>
+                    
+                    <div class="menu-card" onclick="showSupport()">
+                        <i class="fas fa-headset"></i>
+                        <span>Поддержка</span>
+                        <span class="card-desc">Связаться с нами</span>
+                    </div>
+                    
+                    <div class="menu-card" onclick="showAbout()">
+                        <i class="fas fa-info-circle"></i>
+                        <span>О клубе</span>
+                        <span class="card-desc">История и правила</span>
+                    </div>
+                </div>
+
+                <div class="rating-preview">
+                    <h3><i class="fas fa-crown" style="color: var(--gold-primary);"></i> ТОП-3 РЕЙТИНГА</h3>
+                    <div class="top-player">
+                        <div class="position">1</div>
+                        <div class="name">Alex Poker Pro</div>
+                        <div class="score">2,500 pts</div>
+                    </div>
+                    <div class="top-player" style="margin-top: 10px;">
+                        <div class="position" style="background: #C0C0C0;">2</div>
+                        <div class="name">River King</div>
+                        <div class="score">2,300 pts</div>
+                    </div>
+                    <div class="top-player" style="margin-top: 10px;">
+                        <div class="position" style="background: #CD7F32;">3</div>
+                        <div class="name">Bluff Master</div>
+                        <div class="score">2,100 pts</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Страница Рейтинг -->
+            <div class="page" id="ratingPage">
+                <div class="rating-header">
+                    <h2>ОБЩИЙ РЕЙТИНГ</h2>
+                    <p>Сезон 2024</p>
+                </div>
+                
+                <div class="rating-list">
+                    <div class="rating-item">
+                        <div class="rank gold">1</div>
+                        <div class="player-info">
+                            <div class="player-name">Alex Poker Pro</div>
+                            <div class="player-stats">Игр: 45 | Побед: 32</div>
+                        </div>
+                        <div class="player-points">2,500</div>
+                    </div>
+                    
+                    <div class="rating-item">
+                        <div class="rank silver">2</div>
+                        <div class="player-info">
+                            <div class="player-name">River King</div>
+                            <div class="player-stats">Игр: 42 | Побед: 28</div>
+                        </div>
+                        <div class="player-points">2,300</div>
+                    </div>
+                    
+                    <div class="rating-item">
+                        <div class="rank bronze">3</div>
+                        <div class="player-info">
+                            <div class="player-name">Bluff Master</div>
+                            <div class="player-stats">Игр: 40 | Побед: 25</div>
+                        </div>
+                        <div class="player-points">2,100</div>
+                    </div>
+                    
+                    <!-- Добавьте больше участников по аналогии -->
+                </div>
+            </div>
+
+            <!-- Страница Профиль -->
+            <div class="page" id="profilePage">
+                <div class="profile-header">
+                    <div class="profile-avatar" onclick="changeAvatar()">
+                        <img src="https://via.placeholder.com/120/8B0000/FFFFFF?text=USER" alt="Avatar" id="avatarImg">
+                        <div class="avatar-overlay">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-name" id="profileName">Александр</div>
+                    <div class="profile-nickname" onclick="changeNickname()">
+                        @alex_poker <i class="fas fa-pen" style="font-size: 12px; margin-left: 5px;"></i>
+                    </div>
+                    
+                    <div class="profile-stats">
+                        <div class="stat-card">
+                            <div class="value">45</div>
+                            <div class="label">Игр</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="value">32</div>
+                            <div class="label">Побед</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="value">71%</div>
+                            <div class="label">Винрейт</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="value">8</div>
+                            <div class="label">Финалок</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-title">
+                    <i class="fas fa-history"></i> История игр
+                </div>
+                <div class="history-list">
+                    <div class="history-item">
+                        <div class="date">10.03</div>
+                        <div class="game">Texas Hold'em</div>
+                        <div class="result win">+1,500</div>
+                    </div>
+                    <div class="history-item">
+                        <div class="date">08.03</div>
+                        <div class="game">Omaha</div>
+                        <div class="result lose">-500</div>
+                    </div>
+                    <div class="history-item">
+                        <div class="date">05.03</div>
+                        <div class="game">Texas Hold'em</div>
+                        <div class="result win">+2,000</div>
+                    </div>
+                </div>
+
+                <div class="section-title">
+                    <i class="fas fa-medal"></i> Достижения
+                </div>
+                <div class="achievements-grid">
+                    <div class="achievement">
+                        <i class="fas fa-crown"></i>
+                        <span>Чемпион</span>
+                    </div>
+                    <div class="achievement">
+                        <i class="fas fa-dragon"></i>
+                        <span>Химера</span>
+                    </div>
+                    <div class="achievement">
+                        <i class="fas fa-skull"></i>
+                        <span>Хищник</span>
+                    </div>
+                    <div class="achievement">
+                        <i class="fas fa-gem"></i>
+                        <span>Коллекционер</span>
+                    </div>
+                    <div class="achievement">
+                        <i class="fas fa-fire"></i>
+                        <span>Стрик</span>
+                    </div>
+                    <div class="achievement">
+                        <i class="fas fa-star"></i>
+                        <span>Легенда</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Нижнее меню -->
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="switchPage('home')">
+                <i class="fas fa-home"></i>
+                <span>Главная</span>
+            </div>
+            <div class="nav-item" onclick="switchPage('rating')">
+                <i class="fas fa-chart-line"></i>
+                <span>Рейтинг</span>
+            </div>
+            <div class="nav-item" onclick="switchPage('profile')">
+                <i class="fas fa-user"></i>
+                <span>Профиль</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно записи -->
+    <div class="modal" id="registerModal">
+        <div class="modal-content">
+            <h2 class="modal-title">Запись на игру</h2>
+            
+            <div class="form-group">
+                <label>Выберите дату</label>
+                <input type="date" id="gameDate" min="2024-03-11">
+            </div>
+            
+            <div class="form-group">
+                <label>Выберите время</label>
+                <select id="gameTime">
+                    <option>19:00 - Texas Hold'em</option>
+                    <option>20:00 - Omaha</option>
+                    <option>21:00 - Турнир</option>
+                    <option>22:00 - Кэш игра</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Комментарий (необязательно)</label>
+                <textarea id="gameComment" rows="3" placeholder="Пожелания, предпочтения..."></textarea>
+            </div>
+            
+            <div class="modal-buttons">
+                <button class="modal-btn secondary" onclick="closeModal()">Отмена</button>
+                <button class="modal-btn primary" onclick="confirmRegistration()">Записаться</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Уведомления -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Подключаем скрипты -->
+    <script>
+        // Инициализация Telegram Web App
+        const tg = window.Telegram.WebApp;
+        
+        // Показываем кнопку "Назад" в Telegram
+        tg.BackButton.show();
+        tg.BackButton.onClick(() => {
+            // Логика для кнопки назад
+            tg.close();
+        });
+
+        // Расширяем на весь экран
+        tg.expand();
+
+        // ========== РАБОТА С ОФЕРТОЙ ==========
+        const offerScreen = document.getElementById('offerScreen');
+        const mainContainer = document.getElementById('mainContainer');
+        
+        // Проверяем, принимал ли пользователь оферту
+        if (localStorage.getItem('offerAccepted')) {
+            offerScreen.classList.add('hidden');
+            mainContainer.classList.add('visible');
+        }
+        
+        document.getElementById('acceptOffer').addEventListener('click', function() {
+            localStorage.setItem('offerAccepted', 'true');
+            offerScreen.classList.add('hidden');
+            mainContainer.classList.add('visible');
+            
+            // Отправляем в Telegram, что пользователь принял оферту
+            tg.sendData(JSON.stringify({
+                action: 'offer_accepted',
+                user_id: tg.initDataUnsafe?.user?.id,
+                username: tg.initDataUnsafe?.user?.username
+            }));
+            
+            showNotification('Добро пожаловать в The River!');
+        });
+
+        // ========== НАВИГАЦИЯ МЕЖДУ СТРАНИЦАМИ ==========
+        const pages = {
+            home: document.getElementById('homePage'),
+            rating: document.getElementById('ratingPage'),
+            profile: document.getElementById('profilePage')
+        };
+        
+        const navItems = document.querySelectorAll('.nav-item');
+        
+        function switchPage(page) {
+            // Скрываем все страницы
+            Object.values(pages).forEach(p => p.classList.remove('active'));
+            
+            // Показываем выбранную страницу
+            pages[page].classList.add('active');
+            
+            // Обновляем активный пункт меню
+            navItems.forEach((item, index) => {
+                item.classList.remove('active');
+                if ((index === 0 && page === 'home') ||
+                    (index === 1 && page === 'rating') ||
+                    (index === 2 && page === 'profile')) {
+                    item.classList.add('active');
+                }
+            });
+        }
+        
+        // ========== ФУНКЦИИ ДЛЯ ГЛАВНОЙ ==========
+        function openRegistration() {
+            document.getElementById('registerModal').classList.add('active');
+        }
+        
+        function showRating() {
+            switchPage('rating');
+        }
+        
+        function showSupport() {
+            showNotification('Служба поддержки: @theriver_support');
+        }
+        
+        function showAbout() {
+            showNotification('The River Poker Club - лучшее место для игры с 2020 года');
+        }
+        
+        // ========== ФУНКЦИИ ДЛЯ ПРОФИЛЯ ==========
+        function changeAvatar() {
+            // В реальном приложении здесь будет загрузка фото
+            showNotification('Функция смены аватара будет доступна в следующем обновлении');
+        }
+        
+        function changeNickname() {
+            const newNickname = prompt('Введите новый никнейм:', '@alex_poker');
+            if (newNickname) {
+                document.querySelector('.profile-nickname').innerHTML = 
+                    newNickname + ' <i class="fas fa-pen" style="font-size: 12px; margin-left: 5px;"></i>';
+                showNotification('Никнейм изменен!');
+            }
+        }
+        
+        // ========== РАБОТА С МОДАЛЬНЫМИ ОКНАМИ ==========
+        function closeModal() {
+            document.getElementById('registerModal').classList.remove('active');
+        }
+        
+        function confirmRegistration() {
+            const date = document.getElementById('gameDate').value;
+            const time = document.getElementById('gameTime').value;
+            const comment = document.getElementById('gameComment').value;
+            
+            if (!date) {
+                showNotification('Выберите дату игры!');
+                return;
+            }
+            
+            // Сохраняем в localStorage
+            const registrations = JSON.parse(localStorage.getItem('registrations') || '[]');
+            registrations.push({
+                date: date,
+                time: time,
+                comment: comment,
+                timestamp: new Date().toISOString()
+            });
+            localStorage.setItem('registrations', JSON.stringify(registrations));
+            
+            closeModal();
+            showNotification('Вы успешно записаны на игру!');
+            
+            // Отправляем в Telegram
+            tg.sendData(JSON.stringify({
+                action: 'game_registration',
+                date: date,
+                time: time
+            }));
+        }
+        
+        // ========== УВЕДОМЛЕНИЯ ==========
+        function showNotification(message, duration = 3000) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, duration);
+        }
+        
+        // ========== ЗАГРУЗКА ДАННЫХ ПОЛЬЗОВАТЕЛЯ ИЗ TELEGRAM ==========
+        window.addEventListener('load', function() {
+            const user = tg.initDataUnsafe?.user;
+            
+            if (user) {
+                // Заполняем профиль данными из Telegram
+                document.getElementById('profileName').textContent = user.first_name || 'Игрок';
+                if (user.username) {
+                    document.querySelector('.profile-nickname').innerHTML = 
+                        '@' + user.username + ' <i class="fas fa-pen" style="font-size: 12px; margin-left: 5px;"></i>';
+                }
+                
+                // Если есть фото профиля в Telegram
+                if (user.photo_url) {
+                    document.getElementById('avatarImg').src = user.photo_url;
+                }
+            }
+            
+            // Загружаем историю игр из localStorage
+            const history = JSON.parse(localStorage.getItem('gameHistory') || '[]');
+            if (history.length > 0) {
+                // Обновляем историю
+            }
+        });
+        
+        // ========== ОБРАБОТКА НАЖАТИЯ НАЗАД ==========
+        document.addEventListener('keyup', function(e) {
+            if (e.key === 'Escape') {
+                if (document.querySelector('.modal.active')) {
+                    closeModal();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
