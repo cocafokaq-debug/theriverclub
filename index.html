@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
+        /* Стили (оставляем без изменений, как в предыдущей версии) */
         * {
             margin: 0;
             padding: 0;
@@ -47,7 +48,6 @@
             position: relative;
         }
 
-        /* Стилизация скролла */
         ::-webkit-scrollbar {
             width: 4px;
         }
@@ -59,7 +59,7 @@
             border-radius: 2px;
         }
 
-        /* Экран оферты */
+        /* Оферта */
         .offer-screen {
             position: fixed;
             top: 0;
@@ -405,6 +405,10 @@
             align-items: center;
             padding: 16px;
             border-bottom: 1px solid var(--border-color);
+            transition: background 0.2s;
+        }
+        .rating-item:hover {
+            background: rgba(198, 164, 63, 0.05);
         }
         .rating-item:last-child {
             border-bottom: none;
@@ -421,6 +425,7 @@
             background: var(--bg-primary);
             color: var(--text-primary);
             border: 2px solid var(--accent-gold);
+            font-size: 14px;
         }
         .rating-item .rank.top-three {
             background: var(--gradient-gold);
@@ -441,6 +446,7 @@
         .player-points {
             font-weight: 600;
             color: var(--accent-gold);
+            font-size: 18px;
         }
 
         /* Страница профиля */
@@ -475,6 +481,7 @@
             justify-content: center;
             color: var(--bg-primary);
             border: 2px solid var(--bg-primary);
+            cursor: pointer;
         }
         .profile-name {
             font-size: 24px;
@@ -595,7 +602,7 @@
             color: var(--accent-gold);
         }
 
-        /* Модальное окно календаря - ИСПРАВЛЕНО */
+        /* Модальное окно календаря */
         .modal {
             display: none;
             position: fixed;
@@ -632,7 +639,6 @@
             color: var(--accent-gold);
         }
 
-        /* Календарь */
         .week-navigation {
             display: flex;
             align-items: center;
@@ -721,14 +727,28 @@
         .tournament-badge {
             background: var(--gradient-gold);
             color: var(--bg-primary);
-            padding: 14px;
+            padding: 16px;
             border-radius: 14px;
-            text-align: center;
+            text-align: left;
             margin-bottom: 16px;
             font-weight: 500;
-            font-size: 13px;
-            line-height: 1.4;
+            font-size: 14px;
+            line-height: 1.5;
             flex-shrink: 0;
+        }
+        
+        .tournament-badge i {
+            margin-right: 8px;
+            color: var(--bg-primary);
+        }
+        
+        .tournament-badge .players-count {
+            display: inline-block;
+            background: rgba(0,0,0,0.2);
+            padding: 4px 10px;
+            border-radius: 20px;
+            margin-top: 8px;
+            font-size: 13px;
         }
 
         .modal-buttons {
@@ -757,7 +777,6 @@
             color: var(--text-primary);
         }
 
-        /* Нижнее меню */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -789,7 +808,6 @@
             color: var(--accent-gold);
         }
 
-        /* Уведомления */
         .toast {
             position: fixed;
             bottom: 80px;
@@ -864,7 +882,7 @@
                         <i class="fas fa-calendar-alt"></i>
                         <span>Записаться на игру</span>
                     </div>
-                    <div class="menu-card" onclick="showRating()">
+                    <div class="menu-card" onclick="switchPage('rating')">
                         <i class="fas fa-trophy"></i>
                         <span>Рейтинг</span>
                     </div>
@@ -872,28 +890,16 @@
                         <i class="fas fa-headset"></i>
                         <span>Поддержка</span>
                     </div>
-                    <div class="menu-card" onclick="showAbout()">
+                    <div class="menu-card" onclick="switchPage('about')">
                         <i class="fas fa-info-circle"></i>
                         <span>О клубе</span>
                     </div>
                 </div>
 
-                <div class="rating-preview">
+                <div class="rating-preview" id="ratingPreview">
                     <h3><i class="fas fa-crown"></i> ТОП-3 РЕЙТИНГА</h3>
-                    <div class="top-player">
-                        <div class="position">1</div>
-                        <div class="name">Александр</div>
-                        <div class="score">2,500 очков</div>
-                    </div>
-                    <div class="top-player">
-                        <div class="position">2</div>
-                        <div class="name">Дмитрий</div>
-                        <div class="score">2,300 очков</div>
-                    </div>
-                    <div class="top-player">
-                        <div class="position">3</div>
-                        <div class="name">Михаил</div>
-                        <div class="score">2,100 очков</div>
+                    <div class="loading-spinner">
+                        <i class="fas fa-spinner fa-spin"></i> Загрузка...
                     </div>
                 </div>
             </div>
@@ -905,38 +911,9 @@
                     <p>Сезон 2026</p>
                 </div>
                 
-                <div class="rating-list">
-                    <div class="rating-item">
-                        <div class="rank top-three">1</div>
-                        <div class="player-info">
-                            <div class="player-name">Александр</div>
-                            <div class="player-stats">Игр: 45 | Побед: 32</div>
-                        </div>
-                        <div class="player-points">2,500 очков</div>
-                    </div>
-                    <div class="rating-item">
-                        <div class="rank top-three">2</div>
-                        <div class="player-info">
-                            <div class="player-name">Дмитрий</div>
-                            <div class="player-stats">Игр: 42 | Побед: 28</div>
-                        </div>
-                        <div class="player-points">2,300 очков</div>
-                    </div>
-                    <div class="rating-item">
-                        <div class="rank top-three">3</div>
-                        <div class="player-info">
-                            <div class="player-name">Михаил</div>
-                            <div class="player-stats">Игр: 40 | Побед: 25</div>
-                        </div>
-                        <div class="player-points">2,100 очков</div>
-                    </div>
-                    <div class="rating-item">
-                        <div class="rank">4</div>
-                        <div class="player-info">
-                            <div class="player-name">Екатерина</div>
-                            <div class="player-stats">Игр: 38 | Побед: 22</div>
-                        </div>
-                        <div class="player-points">1,950 очков</div>
+                <div class="rating-list" id="ratingList">
+                    <div class="loading-spinner">
+                        <i class="fas fa-spinner fa-spin"></i> Загрузка рейтинга...
                     </div>
                 </div>
             </div>
@@ -950,28 +927,28 @@
                             <i class="fas fa-camera"></i>
                         </div>
                     </div>
-                    <div class="profile-name" id="profileName">Александр</div>
-                    <div class="profile-nickname" onclick="changeNickname()">
-                        @alex_river <i class="fas fa-pen"></i>
+                    <div class="profile-name" id="profileName">Загрузка...</div>
+                    <div class="profile-nickname" onclick="changeNickname()" id="profileNickname">
+                        <i class="fas fa-spinner fa-spin"></i>
                     </div>
                 </div>
 
-                <div class="stats-grid">
+                <div class="stats-grid" id="profileStats">
                     <div class="stat-card">
-                        <div class="stat-value">45</div>
+                        <div class="stat-value">-</div>
                         <div class="stat-label">Игр</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value">32</div>
+                        <div class="stat-value">-</div>
                         <div class="stat-label">Побед</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value">71%</div>
-                        <div class="stat-label">Побед</div>
+                        <div class="stat-value">-</div>
+                        <div class="stat-label">%</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value">8</div>
-                        <div class="stat-label">Финалок</div>
+                        <div class="stat-value">-</div>
+                        <div class="stat-label">Очков</div>
                     </div>
                 </div>
 
@@ -1161,49 +1138,212 @@
         ];
 
         // ===== ПОДКЛЮЧЕНИЕ К GOOGLE ТАБЛИЦЕ =====
-        // ЗДЕСЬ НУЖНО БУДЕТ ВСТАВИТЬ ССЫЛКУ НА ТВОЮ ТАБЛИЦУ
-        const GOOGLE_SHEETS_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR7ial7s5UOFQR2f2Y6O43a5goVFpIe8YNIEcH6JJ_u06NMqwR62N3fySqcRMgFO__F4I-WPcCkXbsa/pub?output=csv';
+        // Базовая ссылка на таблицу
+        const SPREADSHEET_ID = '2PACX-1vR7ial7s5UOFQR2f2Y6O43a5goVFpIe8YNIEcH6JJ_u06NMqwR62N3fySqcRMgFO__F4I-WPcCkXbsa';
         
-        let tournaments = {}; // Пустой объект, заполнится из Google
+        // Ссылки на разные листы (нужно будет получить правильные gid)
+        const TOURNAMENTS_URL = `https://docs.google.com/spreadsheets/d/e/${SPREADSHEET_ID}/pub?gid=0&output=csv`; // Лист "Турниры"
+        const RATING_URL = `https://docs.google.com/spreadsheets/d/e/${SPREADSHEET_ID}/pub?gid=247977843&output=csv`; // Лист "Рейтинг" - ЗАМЕНИТЬ НА РЕАЛЬНЫЙ GID!
+        
+        let tournaments = {};
+        let ratingData = [];
 
         // Загрузка турниров из Google Sheets
         async function loadTournamentsFromGoogle() {
-            if (!GOOGLE_SHEETS_URL) {
-                console.log('Google Sheets не подключен, использую тестовые данные');
-                // Тестовые данные пока нет Google Sheets
-                tournaments = {
-                    '2026-03-15': { type: 'Турнир по спортивному покеру', time: '19:00' },
-                    '2026-03-18': { type: 'Турнир по спортивному покеру', time: '19:00' },
-                    '2026-03-20': { type: 'Турнир по спортивному покеру', time: '19:00' },
-                    '2026-03-22': { type: 'Турнир по спортивному покеру', time: '19:00' },
-                    '2026-03-25': { type: 'Турнир по спортивному покеру', time: '19:00' }
-                };
-                renderCalendar();
-                return;
-            }
-
             try {
-                document.getElementById('calendarLoading').style.display = 'block';
+                const response = await fetch(TOURNAMENTS_URL);
+                const csvText = await response.text();
                 
-                // Здесь будет запрос к Google Sheets
-                // Пока используем тестовые данные
-                setTimeout(() => {
-                    tournaments = {
-                        '2026-03-15': { type: 'Турнир по спортивному покеру', time: '19:00' },
-                        '2026-03-18': { type: 'Турнир по спортивному покеру', time: '19:00' },
-                        '2026-03-20': { type: 'Турнир по спортивному покеру', time: '19:00' },
-                        '2026-03-22': { type: 'Турнир по спортивному покеру', time: '19:00' },
-                        '2026-03-25': { type: 'Турнир по спортивному покеру', time: '19:00' }
-                    };
+                const lines = csvText.split('\n');
+                tournaments = {};
+                
+                for (let i = 1; i < lines.length; i++) {
+                    if (!lines[i].trim()) continue;
                     
-                    document.getElementById('calendarLoading').style.display = 'none';
+                    const values = lines[i].split(',');
+                    if (values.length >= 4) {
+                        const date = values[0].trim().replace(/"/g, '');
+                        const time = values[1].trim().replace(/"/g, '');
+                        const name = values[2].trim().replace(/"/g, '');
+                        const description = values[3].trim().replace(/"/g, '');
+                        const players = values[4] ? values[4].trim().replace(/"/g, '') : '';
+                        
+                        tournaments[date] = {
+                            time: time,
+                            type: name,
+                            description: description,
+                            players: players
+                        };
+                    }
+                }
+                
+                if (document.getElementById('registerModal').classList.contains('active')) {
                     renderCalendar();
-                }, 500);
+                }
                 
             } catch (error) {
                 console.error('Ошибка загрузки турниров:', error);
-                document.getElementById('calendarLoading').style.display = 'none';
-                showNotification('Ошибка загрузки расписания');
+            }
+        }
+
+        // Загрузка рейтинга из Google Sheets
+        async function loadRatingFromGoogle() {
+            try {
+                const response = await fetch(RATING_URL);
+                const csvText = await response.text();
+                
+                const lines = csvText.split('\n');
+                ratingData = [];
+                
+                // Пропускаем заголовки (первая строка)
+                for (let i = 1; i < lines.length; i++) {
+                    if (!lines[i].trim()) continue;
+                    
+                    const values = lines[i].split(',');
+                    if (values.length >= 6) {
+                        const telegramId = values[0].trim().replace(/"/g, '');
+                        const name = values[1].trim().replace(/"/g, '');
+                        const nickname = values[2].trim().replace(/"/g, '');
+                        const points = parseInt(values[3].trim().replace(/"/g, '')) || 0;
+                        const games = parseInt(values[4].trim().replace(/"/g, '')) || 0;
+                        const wins = parseInt(values[5].trim().replace(/"/g, '')) || 0;
+                        
+                        ratingData.push({
+                            id: telegramId,
+                            name: name,
+                            nickname: nickname,
+                            points: points,
+                            games: games,
+                            wins: wins
+                        });
+                    }
+                }
+                
+                // Сортируем по очкам (по убыванию)
+                ratingData.sort((a, b) => b.points - a.points);
+                
+                // Обновляем отображение
+                updateRatingDisplay();
+                updateUserProfile();
+                
+            } catch (error) {
+                console.error('Ошибка загрузки рейтинга:', error);
+                showNotification('Ошибка загрузки рейтинга');
+            }
+        }
+
+        // Обновление отображения рейтинга
+        function updateRatingDisplay() {
+            // Обновить превью на главной (ТОП-3)
+            const previewContainer = document.getElementById('ratingPreview');
+            if (previewContainer) {
+                const top3 = ratingData.slice(0, 3);
+                let previewHtml = '<h3><i class="fas fa-crown"></i> ТОП-3 РЕЙТИНГА</h3>';
+                
+                if (top3.length > 0) {
+                    top3.forEach((player, index) => {
+                        previewHtml += `
+                            <div class="top-player">
+                                <div class="position">${index + 1}</div>
+                                <div class="name">${player.name}</div>
+                                <div class="score">${player.points.toLocaleString()} очков</div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    previewHtml += '<div style="text-align: center; color: var(--text-muted); padding: 20px;">Нет данных</div>';
+                }
+                
+                previewContainer.innerHTML = previewHtml;
+            }
+            
+            // Обновить полный список рейтинга
+            const ratingList = document.getElementById('ratingList');
+            if (ratingList) {
+                if (ratingData.length > 0) {
+                    let fullHtml = '';
+                    ratingData.forEach((player, index) => {
+                        const winRate = player.games > 0 ? Math.round((player.wins / player.games) * 100) : 0;
+                        fullHtml += `
+                            <div class="rating-item">
+                                <div class="rank ${index < 3 ? 'top-three' : ''}">${index + 1}</div>
+                                <div class="player-info">
+                                    <div class="player-name">${player.name}</div>
+                                    <div class="player-stats">Игр: ${player.games} | Побед: ${player.wins} (${winRate}%)</div>
+                                </div>
+                                <div class="player-points">${player.points.toLocaleString()}</div>
+                            </div>
+                        `;
+                    });
+                    ratingList.innerHTML = fullHtml;
+                } else {
+                    ratingList.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 30px;">Рейтинг пока пуст</div>';
+                }
+            }
+        }
+
+        // Обновление профиля текущего пользователя
+        function updateUserProfile() {
+            const user = tg.initDataUnsafe?.user;
+            if (!user) return;
+            
+            const userId = user.id.toString();
+            const userRating = ratingData.find(p => p.id === userId);
+            
+            const profileName = document.getElementById('profileName');
+            const profileNickname = document.getElementById('profileNickname');
+            const profileStats = document.getElementById('profileStats');
+            
+            if (userRating) {
+                // Данные из рейтинга
+                profileName.textContent = userRating.name;
+                profileNickname.innerHTML = userRating.nickname + ' <i class="fas fa-pen"></i>';
+                
+                const winRate = userRating.games > 0 ? Math.round((userRating.wins / userRating.games) * 100) : 0;
+                profileStats.innerHTML = `
+                    <div class="stat-card">
+                        <div class="stat-value">${userRating.games}</div>
+                        <div class="stat-label">Игр</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${userRating.wins}</div>
+                        <div class="stat-label">Побед</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${winRate}%</div>
+                        <div class="stat-label">Побед</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${userRating.points}</div>
+                        <div class="stat-label">Очков</div>
+                    </div>
+                `;
+            } else {
+                // Данные из Telegram, если нет в рейтинге
+                profileName.textContent = user.first_name || 'Игрок';
+                profileNickname.innerHTML = (user.username ? '@' + user.username : '@player') + ' <i class="fas fa-pen"></i>';
+                profileStats.innerHTML = `
+                    <div class="stat-card">
+                        <div class="stat-value">0</div>
+                        <div class="stat-label">Игр</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">0</div>
+                        <div class="stat-label">Побед</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">0%</div>
+                        <div class="stat-label">Побед</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">0</div>
+                        <div class="stat-label">Очков</div>
+                    </div>
+                `;
+            }
+            
+            if (user.photo_url) {
+                document.getElementById('avatarImg').src = user.photo_url;
             }
         }
 
@@ -1221,17 +1361,20 @@
             Object.values(pages).forEach(p => p.classList.remove('active'));
             pages[page].classList.add('active');
             
-            navItems.forEach(item => {
+            navItems.forEach((item, index) => {
                 item.classList.remove('active');
-                if (item.querySelector('span').textContent.includes({
-                    home: 'Главная',
-                    rating: 'Рейтинг',
-                    profile: 'Профиль',
-                    about: 'О клубе'
-                }[page])) {
+                if ((index === 0 && page === 'home') ||
+                    (index === 1 && page === 'rating') ||
+                    (index === 2 && page === 'profile') ||
+                    (index === 3 && page === 'about')) {
                     item.classList.add('active');
                 }
             });
+            
+            // Загружаем данные при переходе на нужные страницы
+            if (page === 'rating' && ratingData.length === 0) {
+                loadRatingFromGoogle();
+            }
         };
 
         // Оферта
@@ -1245,6 +1388,9 @@
             document.getElementById('offerScreen').classList.add('hidden');
             document.getElementById('mainContainer').classList.add('visible');
             showNotification('Добро пожаловать в The River Club!');
+            
+            // Загружаем данные
+            loadRatingFromGoogle();
         });
 
         // Календарь
@@ -1325,8 +1471,17 @@
             
             if (tournaments[date]) {
                 const tournament = tournaments[date];
-                document.getElementById('tournamentBadge').innerHTML = 
-                    `<i class="fas fa-chess-board"></i> ${tournament.type}, начало в ${tournament.time}`;
+                let badgeHtml = `
+                    <div><i class="fas fa-chess-board"></i> ${tournament.type}</div>
+                    <div style="margin-top: 8px;"><i class="fas fa-clock"></i> Начало в ${tournament.time}</div>
+                    <div style="margin-top: 8px;"><i class="fas fa-info-circle"></i> ${tournament.description || 'Турнир по спортивному покеру'}</div>
+                `;
+                
+                if (tournament.players) {
+                    badgeHtml += `<div class="players-count"><i class="fas fa-users"></i> ${tournament.players} игроков</div>`;
+                }
+                
+                document.getElementById('tournamentBadge').innerHTML = badgeHtml;
                 document.getElementById('tournamentBadge').style.display = 'block';
                 document.getElementById('confirmBtn').style.display = 'block';
             } else {
@@ -1339,7 +1494,7 @@
             document.getElementById('registerModal').classList.add('active');
             currentDate = new Date();
             selectedDate = null;
-            loadTournamentsFromGoogle(); // Загружаем турниры при открытии
+            loadTournamentsFromGoogle();
         };
 
         window.closeModal = function() {
@@ -1403,25 +1558,16 @@
         };
 
         window.changeNickname = function() {
-            const newNick = prompt('Введите новый никнейм:', '@alex_river');
+            const newNick = prompt('Введите новый никнейм:');
             if (newNick) {
-                document.querySelector('.profile-nickname').innerHTML = 
-                    newNick + ' <i class="fas fa-pen"></i>';
-                showNotification('Никнейм изменен');
+                document.getElementById('profileNickname').innerHTML = newNick + ' <i class="fas fa-pen"></i>';
+                showNotification('Никнейм изменен (только локально)');
             }
         };
 
-        // Действия
-        window.showRating = function() {
-            switchPage('rating');
-        };
-
+        // Поддержка
         window.showSupport = function() {
             showNotification('Служба поддержки: @theriver_support');
-        };
-
-        window.showAbout = function() {
-            switchPage('about');
         };
 
         // Уведомления
@@ -1432,21 +1578,14 @@
             setTimeout(() => toast.classList.remove('show'), duration);
         }
 
-        // Загрузка пользователя
+        // Загрузка данных при старте
         window.addEventListener('load', function() {
-            const user = tg.initDataUnsafe?.user;
-            if (user) {
-                document.getElementById('profileName').textContent = user.first_name || 'Игрок';
-                if (user.username) {
-                    document.querySelector('.profile-nickname').innerHTML = 
-                        '@' + user.username + ' <i class="fas fa-pen"></i>';
-                }
-                if (user.photo_url) {
-                    document.getElementById('avatarImg').src = user.photo_url;
-                }
-            }
-            
             renderAchievements();
+            
+            // Если оферта уже принята, загружаем данные
+            if (localStorage.getItem('offerAccepted')) {
+                loadRatingFromGoogle();
+            }
         });
     </script>
 </body>
