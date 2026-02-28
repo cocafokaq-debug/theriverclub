@@ -1300,15 +1300,16 @@
         const TOURNAMENTS_URL = `https://docs.google.com/spreadsheets/d/e/${SPREADSHEET_ID}/pub?gid=0&output=csv`; // Лист "Турниры"
         const RATING_URL = `https://docs.google.com/spreadsheets/d/e/${SPREADSHEET_ID}/pub?gid=123456789&output=csv`; // Лист "Рейтинг" - ЗАМЕНИТЬ GID!
         
-        // ССЫЛКА НА ФОРМУ И ID ПОЛЕЙ (ИСПРАВЛЕНО!)
+        // ССЫЛКА НА ФОРМУ И ID ПОЛЕЙ
         const REGISTRATION_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSehhF1Pw6bh5hWZ4p_9UOZPmzxb0b4jq1EBhAg3-Xc1063Q8Q/formResponse';
         
+        // ID ПОЛЕЙ (исправлено с учетом колонки "Отметка времени")
         const FORM_FIELDS = {
-            date: 'entry.1854315628',      // Дата турнира
-            telegramId: 'entry.1155959813',  // Telegram ID
-            name: 'entry.406498245',        // Имя
-            username: 'entry.671432415',   // Username
-            action: 'entry.1947153270'         // Действие
+            date: 'entry.1155959813',      // Дата турнира (попадает в колонку C)
+            telegramId: 'entry.406498245',   // Telegram ID (попадает в колонку D)
+            name: 'entry.671432415',         // Имя (попадает в колонку E)
+            username: 'entry.1947153270',    // Username (попадает в колонку F)
+            action: 'entry.1854315628'       // Действие (попадает в колонку G)
         };
         
         let tournaments = {};
@@ -1395,32 +1396,27 @@
         }
 
         // Отправка в Google Forms
-    async function sendToGoogleForm(data) {
-    try {
-        const formData = new FormData();
-        
-        // Отправляем МЕТКИ вместо реальных данных
-        formData.append('entry.1854315628', 'МЕТКА_ДАТА');
-        formData.append('entry.1155959813', 'МЕТКА_TG');
-        formData.append('entry.406498245', 'МЕТКА_ИМЯ');
-        formData.append('entry.671432415', 'МЕТКА_USERNAME');
-        formData.append('entry.1947153270', 'МЕТКА_ДЕЙСТВИЕ');
-        
-        console.log('Отправляем тестовые метки...');
-        
-        await fetch(REGISTRATION_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            body: formData
-        });
-        
-        showNotification('Тестовые данные отправлены! Проверь таблицу');
-        return true;
-    } catch (error) {
-        console.error('Ошибка отправки в форму:', error);
-        return false;
-    }
-}
+        async function sendToGoogleForm(data) {
+            try {
+                const formData = new FormData();
+                formData.append(FORM_FIELDS.date, data.date);
+                formData.append(FORM_FIELDS.telegramId, data.telegramId);
+                formData.append(FORM_FIELDS.name, data.name);
+                formData.append(FORM_FIELDS.username, data.username);
+                formData.append(FORM_FIELDS.action, data.action);
+                
+                await fetch(REGISTRATION_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: formData
+                });
+                
+                return true;
+            } catch (error) {
+                console.error('Ошибка отправки в форму:', error);
+                return false;
+            }
+        }
 
         // Проверка, записан ли уже пользователь на эту дату
         function isAlreadyRegistered(date, userId) {
@@ -1704,7 +1700,7 @@
             document.getElementById('registerModal').classList.remove('active');
         };
 
-        // Подтверждение записи (с проверкой на дубли)
+        // Подтверждение записи
         window.confirmRegistration = async function() {
             if (!selectedDate) {
                 showNotification('Выберите дату');
