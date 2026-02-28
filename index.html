@@ -91,7 +91,7 @@
             border-radius: 3px;
         }
 
-        /* Оферта */
+        /* Оферта - ИСПРАВЛЕНО */
         .offer-screen {
             position: fixed;
             top: 0;
@@ -123,7 +123,7 @@
             position: relative;
             overflow: hidden;
             margin: auto;
-            max-height: 90vh;
+            max-height: 85vh;
             display: flex;
             flex-direction: column;
         }
@@ -139,22 +139,22 @@
         }
         .offer-logo {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             position: relative;
             flex-shrink: 0;
         }
         .offer-logo i {
-            font-size: 70px;
+            font-size: 60px;
             background: var(--gradient-red);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
             filter: drop-shadow(var(--shadow-red));
             animation: pulse 2s ease-in-out infinite;
         }
         .offer-logo h1 {
             font-family: 'Playfair Display', serif;
-            font-size: 38px;
+            font-size: 32px;
             background: var(--gradient-gold);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -163,8 +163,8 @@
         }
         .offer-logo p {
             color: var(--accent-red);
-            font-size: 12px;
-            letter-spacing: 5px;
+            font-size: 11px;
+            letter-spacing: 4px;
             text-transform: uppercase;
         }
         .offer-text {
@@ -173,13 +173,13 @@
             padding: 15px;
             background: rgba(0,0,0,0.3);
             border-radius: 16px;
-            margin: 15px 0;
+            margin: 10px 0;
             font-size: 12px;
             line-height: 1.5;
             color: var(--text-secondary);
             border: 1px solid var(--border-color);
-            min-height: 200px;
-            max-height: 50vh;
+            min-height: 150px;
+            max-height: 45vh;
         }
         .offer-text h2 {
             color: var(--accent-red);
@@ -202,7 +202,7 @@
         .offer-footer {
             font-size: 11px;
             text-align: center;
-            margin-top: 10px;
+            margin: 5px 0 10px;
             color: var(--accent-gold);
             font-style: italic;
             flex-shrink: 0;
@@ -211,23 +211,26 @@
         /* Кнопка с прозрачностью */
         .accept-btn {
             width: 100%;
-            padding: 16px;
+            padding: 14px;
             background: rgba(211, 47, 47, 0.25);
             backdrop-filter: blur(5px);
             border: 1.5px solid var(--accent-red);
             border-radius: 16px;
             color: var(--text-primary);
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 2px;
             cursor: pointer;
             transition: all 0.3s;
-            margin-top: 5px;
             position: relative;
             overflow: hidden;
             box-shadow: var(--shadow-red);
             flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
         .accept-btn::before {
             content: '';
@@ -675,7 +678,7 @@
             font-size: 18px;
         }
 
-        /* Страница профиля - ИСПРАВЛЕНО */
+        /* Страница профиля */
         .profile-header {
             text-align: center;
             margin-bottom: 24px;
@@ -885,7 +888,7 @@
             color: var(--accent-gold);
         }
 
-        /* Достижения - ИСПРАВЛЕНО */
+        /* Достижения */
         .achievements-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -948,7 +951,7 @@
             color: var(--text-secondary);
         }
 
-        /* История игр - ИСПРАВЛЕНО */
+        /* История игр */
         .history-list {
             background: linear-gradient(135deg, var(--bg-card), var(--bg-secondary));
             border-radius: 20px;
@@ -1300,7 +1303,7 @@
             
             <button class="accept-btn" id="acceptOffer">
                 <span>ПРИНЯТЬ УСЛОВИЯ</span>
-                <i class="fas fa-arrow-right" style="margin-left: 10px;"></i>
+                <i class="fas fa-arrow-right"></i>
             </button>
         </div>
     </div>
@@ -1368,7 +1371,7 @@
                 </div>
             </div>
 
-            <!-- Страница профиля - ИСПРАВЛЕНО -->
+            <!-- Страница профиля -->
             <div class="page" id="profilePage">
                 <div class="profile-header" data-aos="fade-down">
                     <div class="profile-avatar">
@@ -1616,7 +1619,7 @@
         // ССЫЛКА НА ФОРМУ
         const REGISTRATION_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSehhF1Pw6bh5hWZ4p_9UOZPmzxb0b4jq1EBhAg3-Xc1063Q8Q/formResponse';
         
-        // ID ПОЛЕЙ (исправленные)
+        // ID ПОЛЕЙ
         const FORM_FIELDS = {
             date: 'entry.1854315628',      // Попадает в колонку B (Дата турнира)
             telegramId: 'entry.1155959813',  // Попадает в колонку C (Telegram ID)
@@ -1863,12 +1866,11 @@
             const achievementCards = document.querySelectorAll('.achievement-card');
             
             if (userRating) {
-                // Проверяем условия для каждого достижения
                 const isChampion = userRating.wins >= 1;
                 const isChimera = userRating.wins >= 10;
-                const isPredator = false; // Пока не реализовано
+                const isPredator = false;
                 const isCollector = userRating.games >= 3;
-                const isStrike = false; // Пока не реализовано
+                const isStrike = false;
                 const isLegend = userRating.games >= 50;
                 
                 const conditions = [isChampion, isChimera, isPredator, isCollector, isStrike, isLegend];
@@ -1901,8 +1903,6 @@
             const historyList = document.getElementById('historyList');
             
             if (userRating && userRating.games > 0) {
-                // Здесь можно добавить реальную историю из таблицы
-                // Пока оставляем пустым
                 historyList.innerHTML = '<div class="history-empty">История игр пока пуста</div>';
             } else {
                 historyList.innerHTML = '<div class="history-empty">История игр пока пуста</div>';
@@ -1933,7 +1933,6 @@
                 }
             });
             
-            // Обновляем анимации при смене страницы
             setTimeout(() => {
                 AOS.refresh();
             }, 100);
@@ -1958,7 +1957,6 @@
             loadRatingFromGoogle();
             updateRegistrationsCount();
             
-            // Обновляем анимации
             setTimeout(() => {
                 AOS.refresh();
             }, 100);
@@ -2102,13 +2100,11 @@
                 return;
             }
             
-            // Проверяем, не записан ли уже
             if (isAlreadyRegistered(selectedDate, user.id)) {
                 showNotification('Вы уже записаны на этот турнир');
                 return;
             }
             
-            // Отправляем в Google Forms
             await sendToGoogleForm({
                 date: selectedDate,
                 telegramId: user.id.toString(),
@@ -2117,7 +2113,6 @@
                 action: 'запись'
             });
             
-            // Сохраняем локально
             const registrations = JSON.parse(localStorage.getItem('registrations') || '[]');
             registrations.push({ 
                 date: selectedDate, 
@@ -2190,7 +2185,6 @@
             const user = tg.initDataUnsafe?.user;
             if (!user) return;
             
-            // Отправляем отмену в Google Forms
             await sendToGoogleForm({
                 date: date,
                 telegramId: user.id.toString(),
@@ -2199,12 +2193,10 @@
                 action: 'отмена'
             });
             
-            // Удаляем из локального хранилища
             let registrations = JSON.parse(localStorage.getItem('registrations') || '[]');
             registrations = registrations.filter(reg => !(reg.userId === user.id && reg.date === date));
             localStorage.setItem('registrations', JSON.stringify(registrations));
             
-            // Обновляем отображение
             updateRegistrationsCount();
             showMyRegistrations();
             showNotification('Запись отменена');
