@@ -1395,27 +1395,32 @@
         }
 
         // Отправка в Google Forms
-        async function sendToGoogleForm(data) {
-            try {
-                const formData = new FormData();
-                formData.append(FORM_FIELDS.date, data.date);
-                formData.append(FORM_FIELDS.telegramId, data.telegramId);
-                formData.append(FORM_FIELDS.name, data.name);
-                formData.append(FORM_FIELDS.username, data.username);
-                formData.append(FORM_FIELDS.action, data.action);
-                
-                await fetch(REGISTRATION_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    body: formData
-                });
-                
-                return true;
-            } catch (error) {
-                console.error('Ошибка отправки в форму:', error);
-                return false;
-            }
-        }
+    async function sendToGoogleForm(data) {
+    try {
+        const formData = new FormData();
+        
+        // Отправляем МЕТКИ вместо реальных данных
+        formData.append('entry.1854315628', 'МЕТКА_ДАТА');
+        formData.append('entry.1155959813', 'МЕТКА_TG');
+        formData.append('entry.406498245', 'МЕТКА_ИМЯ');
+        formData.append('entry.671432415', 'МЕТКА_USERNAME');
+        formData.append('entry.1947153270', 'МЕТКА_ДЕЙСТВИЕ');
+        
+        console.log('Отправляем тестовые метки...');
+        
+        await fetch(REGISTRATION_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            body: formData
+        });
+        
+        showNotification('Тестовые данные отправлены! Проверь таблицу');
+        return true;
+    } catch (error) {
+        console.error('Ошибка отправки в форму:', error);
+        return false;
+    }
+}
 
         // Проверка, записан ли уже пользователь на эту дату
         function isAlreadyRegistered(date, userId) {
