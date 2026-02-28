@@ -1303,27 +1303,13 @@
         // ССЫЛКА НА ФОРМУ И ID ПОЛЕЙ (ИСПРАВЛЕНО!)
         const REGISTRATION_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSehhF1Pw6bh5hWZ4p_9UOZPmzxb0b4jq1EBhAg3-Xc1063Q8Q/formResponse';
         
-async function sendToGoogleForm(data) {
-    try {
-        const formData = new FormData();
-        formData.append('entry.1854315628', 'ТЕСТ_ДАТА');  // Отправляем тестовые метки
-        formData.append('entry.1155959813', 'ТЕСТ_TG');
-        formData.append('entry.406498245', 'ТЕСТ_ИМЯ');
-        formData.append('entry.671432415', 'ТЕСТ_USERNAME');
-        formData.append('entry.1947153270', 'ТЕСТ_ДЕЙСТВИЕ');
-        
-        await fetch(REGISTRATION_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            body: formData
-        });
-        
-        return true;
-    } catch (error) {
-        console.error('Ошибка отправки в форму:', error);
-        return false;
-    }
-}
+        const FORM_FIELDS = {
+            date: 'entry.1854315628',      // Дата турнира
+            telegramId: 'entry.1155959813',  // Telegram ID
+            name: 'entry.406498245',        // Имя
+            username: 'entry.671432415',   // Username
+            action: 'entry.1947153270'         // Действие
+        };
         
         let tournaments = {};
         let ratingData = [];
