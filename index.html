@@ -66,7 +66,6 @@
             background-color: rgba(10, 12, 15, 0.95);
         }
 
-        /* Анимированный фон */
         body::before {
             content: '';
             position: fixed;
@@ -98,161 +97,139 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.98);
-            z-index: 1000;
+            background: rgba(0, 0, 0, 0.98);
+            z-index: 9999;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 16px;
             overflow-y: auto;
-            transition: opacity 0.5s;
-            backdrop-filter: blur(10px);
+            transition: opacity 0.3s ease;
         }
+
         .offer-screen.hidden {
             opacity: 0;
             pointer-events: none;
+            visibility: hidden;
         }
+
         .offer-card {
             background: var(--bg-secondary);
-            border-radius: 32px;
-            padding: 30px 24px;
-            max-width: 500px;
+            border-radius: 28px;
+            padding: 24px 20px;
+            max-width: 480px;
             width: 100%;
             border: 1px solid var(--accent-red);
             box-shadow: var(--shadow-lg), var(--shadow-red);
             position: relative;
             overflow: hidden;
-            margin: auto;
-            max-height: 85vh;
+            max-height: 90vh;
             display: flex;
             flex-direction: column;
         }
-        .offer-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(211,47,47,0.1) 0%, transparent 70%);
-            animation: rotate 20s linear infinite;
-        }
+
         .offer-logo {
             text-align: center;
-            margin-bottom: 15px;
-            position: relative;
+            margin-bottom: 16px;
             flex-shrink: 0;
         }
+
         .offer-logo i {
-            font-size: 60px;
+            font-size: 56px;
             background: var(--gradient-red);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             filter: drop-shadow(var(--shadow-red));
-            animation: pulse 2s ease-in-out infinite;
         }
+
         .offer-logo h1 {
             font-family: 'Playfair Display', serif;
             font-size: 32px;
             background: var(--gradient-gold);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: 3px;
-            text-shadow: var(--shadow-gold);
+            letter-spacing: 2px;
         }
+
         .offer-logo p {
             color: var(--accent-red);
             font-size: 11px;
-            letter-spacing: 4px;
+            letter-spacing: 3px;
             text-transform: uppercase;
         }
+
         .offer-text {
-            flex: 1;
+            flex: 1 1 auto;
             overflow-y: auto;
-            padding: 15px;
-            background: rgba(0,0,0,0.3);
+            padding: 16px;
+            background: rgba(0, 0, 0, 0.3);
             border-radius: 16px;
-            margin: 10px 0;
-            font-size: 12px;
+            margin: 12px 0;
+            font-size: 13px;
             line-height: 1.5;
             color: var(--text-secondary);
             border: 1px solid var(--border-color);
-            min-height: 150px;
-            max-height: 45vh;
+            max-height: 50vh;
         }
+
         .offer-text h2 {
             color: var(--accent-red);
-            font-size: 16px;
-            margin: 12px 0 8px;
+            font-size: 18px;
+            margin: 16px 0 10px;
             font-family: 'Playfair Display', serif;
         }
+
         .offer-text h3 {
             color: var(--accent-gold);
-            font-size: 14px;
-            margin: 10px 0 5px;
+            font-size: 15px;
+            margin: 12px 0 8px;
         }
+
         .offer-text p {
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
+
         .offer-text ul, .offer-text ol {
             padding-left: 20px;
-            margin: 5px 0;
+            margin: 8px 0;
         }
+
         .offer-footer {
             font-size: 11px;
             text-align: center;
-            margin: 5px 0 10px;
+            margin: 8px 0 12px;
             color: var(--accent-gold);
             font-style: italic;
             flex-shrink: 0;
         }
-        
-        /* Кнопка с прозрачностью */
+
         .accept-btn {
             width: 100%;
-            padding: 14px;
-            background: rgba(211, 47, 47, 0.25);
-            backdrop-filter: blur(5px);
+            padding: 14px 20px;
+            background: rgba(211, 47, 47, 0.2);
+            backdrop-filter: blur(10px);
             border: 1.5px solid var(--accent-red);
             border-radius: 16px;
             color: var(--text-primary);
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 1.5px;
             cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-            box-shadow: var(--shadow-red);
-            flex-shrink: 0;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
+            flex-shrink: 0;
         }
-        .accept-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
-            transition: left 0.5s;
-        }
-        .accept-btn:hover::before {
-            left: 100%;
-        }
+
         .accept-btn:hover {
-            background: rgba(211, 47, 47, 0.4);
+            background: rgba(211, 47, 47, 0.35);
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(211,47,47,0.3);
+            box-shadow: 0 8px 20px rgba(211, 47, 47, 0.3);
             border-color: var(--accent-red-light);
-        }
-        .accept-btn:active {
-            transform: translateY(0);
         }
 
         /* Основной контейнер */
@@ -264,7 +241,6 @@
             animation: fadeIn 0.5s;
         }
 
-        /* Шапка */
         .header {
             background: rgba(20, 24, 28, 0.95);
             backdrop-filter: blur(10px);
@@ -291,7 +267,6 @@
             text-transform: uppercase;
         }
 
-        /* Контент */
         .content {
             padding: 20px 16px 80px;
         }
@@ -319,22 +294,6 @@
             }
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        /* Главная страница */
         .hero-section {
             background: linear-gradient(135deg, rgba(30, 35, 41, 0.95), rgba(20, 24, 28, 0.95));
             backdrop-filter: blur(10px);
@@ -434,7 +393,6 @@
             box-shadow: var(--shadow-red);
         }
 
-        /* Рейтинг превью */
         .rating-preview {
             background: linear-gradient(135deg, var(--bg-card), var(--bg-secondary));
             border-radius: 24px;
@@ -492,7 +450,6 @@
             font-weight: 600;
         }
 
-        /* Страница о клубе */
         .about-section {
             background: linear-gradient(135deg, var(--bg-card), var(--bg-secondary));
             border-radius: 24px;
@@ -604,7 +561,6 @@
             font-size: 14px;
         }
 
-        /* Страница рейтинга */
         .rating-header {
             text-align: center;
             margin-bottom: 24px;
@@ -678,7 +634,6 @@
             font-size: 18px;
         }
 
-        /* Страница профиля */
         .profile-header {
             text-align: center;
             margin-bottom: 24px;
@@ -754,7 +709,6 @@
             color: var(--text-muted);
         }
 
-        /* Кнопка моих записей */
         .my-registrations-btn {
             background: linear-gradient(135deg, var(--bg-card), var(--bg-secondary));
             border: 1px solid rgba(211,47,47,0.3);
@@ -798,7 +752,6 @@
             box-shadow: var(--shadow-red);
         }
 
-        /* Модальное окно записей */
         .registrations-modal {
             display: none;
             position: fixed;
@@ -888,7 +841,6 @@
             color: var(--accent-gold);
         }
 
-        /* Достижения */
         .achievements-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -951,7 +903,6 @@
             color: var(--text-secondary);
         }
 
-        /* История игр */
         .history-list {
             background: linear-gradient(135deg, var(--bg-card), var(--bg-secondary));
             border-radius: 20px;
@@ -1004,7 +955,6 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* Календарь */
         .modal {
             display: none;
             position: fixed;
@@ -1205,7 +1155,6 @@
             color: var(--accent-red);
         }
 
-        /* Нижнее меню */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -1244,7 +1193,6 @@
             filter: drop-shadow(var(--shadow-red));
         }
 
-        /* Уведомления */
         .toast {
             position: fixed;
             bottom: 80px;
@@ -1268,7 +1216,6 @@
             to { transform: translateY(0); opacity: 1; }
         }
 
-        /* Загрузка */
         .loading-spinner {
             text-align: center;
             padding: 20px;
@@ -1280,6 +1227,14 @@
         @keyframes spin {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
+        }
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
     </style>
 </head>
@@ -1621,17 +1576,16 @@
         
         // ID ПОЛЕЙ
         const FORM_FIELDS = {
-            date: 'entry.1854315628',      // Попадает в колонку B (Дата турнира)
-            telegramId: 'entry.1155959813',  // Попадает в колонку C (Telegram ID)
-            name: 'entry.406498245',        // Попадает в колонку D (Имя)
-            username: 'entry.671432415',    // Попадает в колонку E (Username)
-            action: 'entry.1947153270'      // Попадает в колонку F (Действие)
+            date: 'entry.1854315628',
+            telegramId: 'entry.1155959813',
+            name: 'entry.406498245',
+            username: 'entry.671432415',
+            action: 'entry.1947153270'
         };
         
         let tournaments = {};
         let ratingData = [];
 
-        // Загрузка турниров
         async function loadTournamentsFromGoogle() {
             try {
                 const response = await fetch(TOURNAMENTS_URL);
@@ -1669,7 +1623,6 @@
             }
         }
 
-        // Загрузка рейтинга
         async function loadRatingFromGoogle() {
             try {
                 const response = await fetch(RATING_URL);
@@ -1706,14 +1659,12 @@
                 updateRatingDisplay();
                 updateUserProfile();
                 updateAchievements();
-                updateHistory();
                 
             } catch (error) {
                 console.error('Ошибка загрузки рейтинга:', error);
             }
         }
 
-        // Отправка в Google Forms
         async function sendToGoogleForm(data) {
             try {
                 const formData = new FormData();
@@ -1736,13 +1687,11 @@
             }
         }
 
-        // Проверка, записан ли уже пользователь на эту дату
         function isAlreadyRegistered(date, userId) {
             const registrations = JSON.parse(localStorage.getItem('registrations') || '[]');
             return registrations.some(reg => reg.date === date && reg.userId === userId);
         }
 
-        // Обновление рейтинга
         function updateRatingDisplay() {
             const previewSpinner = document.getElementById('ratingPreviewSpinner');
             const previewContent = document.getElementById('ratingPreviewContent');
@@ -1792,7 +1741,6 @@
             }
         }
 
-        // Обновление профиля
         function updateUserProfile() {
             const user = tg.initDataUnsafe?.user;
             if (!user) return;
@@ -1855,7 +1803,6 @@
             }
         }
 
-        // Обновление достижений
         function updateAchievements() {
             const user = tg.initDataUnsafe?.user;
             if (!user) return;
@@ -1892,24 +1839,6 @@
             }
         }
 
-        // Обновление истории игр
-        function updateHistory() {
-            const user = tg.initDataUnsafe?.user;
-            if (!user) return;
-            
-            const userId = user.id.toString();
-            const userRating = ratingData.find(p => p.id === userId);
-            
-            const historyList = document.getElementById('historyList');
-            
-            if (userRating && userRating.games > 0) {
-                historyList.innerHTML = '<div class="history-empty">История игр пока пуста</div>';
-            } else {
-                historyList.innerHTML = '<div class="history-empty">История игр пока пуста</div>';
-            }
-        }
-
-        // Навигация
         const pages = {
             home: document.getElementById('homePage'),
             rating: document.getElementById('ratingPage'),
@@ -1942,7 +1871,6 @@
             }
         };
 
-        // Оферта
         if (localStorage.getItem('offerAccepted')) {
             document.getElementById('offerScreen').classList.add('hidden');
             document.getElementById('mainContainer').classList.add('visible');
@@ -1962,7 +1890,6 @@
             }, 100);
         });
 
-        // Календарь
         let currentDate = new Date();
         let selectedDate = null;
 
@@ -2082,7 +2009,6 @@
             document.getElementById('registerModal').classList.remove('active');
         };
 
-        // Подтверждение записи
         window.confirmRegistration = async function() {
             if (!selectedDate) {
                 showNotification('Выберите дату');
@@ -2131,7 +2057,6 @@
             }));
         };
 
-        // Функции для работы с записями
         function getUserRegistrations() {
             const user = tg.initDataUnsafe?.user;
             if (!user) return [];
@@ -2206,7 +2131,6 @@
             document.getElementById('registrationsModal').classList.remove('active');
         };
 
-        // Достижения
         function renderAchievements() {
             const grid = document.getElementById('achievementsGrid');
             let html = '';
@@ -2229,12 +2153,10 @@
             showNotification(`${ach.title}: ${ach.requirement}`, 3000);
         };
 
-        // Поддержка
         window.showSupport = function() {
             showNotification('Служба поддержки: @theriver_support');
         };
 
-        // Уведомления
         function showNotification(message, duration = 3000) {
             const toast = document.getElementById('toast');
             toast.textContent = message;
@@ -2242,7 +2164,6 @@
             setTimeout(() => toast.classList.remove('show'), duration);
         }
 
-        // Загрузка при старте
         window.addEventListener('load', function() {
             renderAchievements();
             
