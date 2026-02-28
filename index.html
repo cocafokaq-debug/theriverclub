@@ -1082,7 +1082,7 @@
                     </div>
                 </div>
 
-                <!-- Кнопка "Мои записи" -->
+                <!-- Кнопка моих записей -->
                 <div class="my-registrations-btn" onclick="showMyRegistrations()">
                     <div class="my-registrations-btn-left">
                         <i class="fas fa-calendar-check"></i>
@@ -1298,18 +1298,17 @@
         
         // ЭТИ ССЫЛКИ НУЖНО БУДЕТ ЗАМЕНИТЬ НА РЕАЛЬНЫЕ
         const TOURNAMENTS_URL = `https://docs.google.com/spreadsheets/d/e/${SPREADSHEET_ID}/pub?gid=0&output=csv`; // Лист "Турниры"
-        const RATING_URL = `https://docs.google.com/spreadsheets/d/e/${SPREADSHEET_ID}/pub?gid=1934829370&output=csv`; // Лист "Рейтинг" - ЗАМЕНИТЬ GID!
+        const RATING_URL = `https://docs.google.com/spreadsheets/d/e/${SPREADSHEET_ID}/pub?gid=123456789&output=csv`; // Лист "Рейтинг" - ЗАМЕНИТЬ GID!
         
-        // ССЫЛКА НА ФОРМУ (твоя)
+        // ССЫЛКА НА ФОРМУ И ID ПОЛЕЙ (ИСПРАВЛЕНО!)
         const REGISTRATION_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSehhF1Pw6bh5hWZ4p_9UOZPmzxb0b4jq1EBhAg3-Xc1063Q8Q/formResponse';
         
-        // ID ПОЛЕЙ ФОРМЫ (нужно заменить на реальные!)
         const FORM_FIELDS = {
             date: 'entry.1155959813',      // Дата турнира
-            telegramId: 'entry.406498245', // Telegram ID
-            name: 'entry.671432415',       // Имя
+            telegramId: 'entry.406498245',  // Telegram ID
+            name: 'entry.671432415',        // Имя
             username: 'entry.1947153270',   // Username
-            action: 'entry.4315628'      // Действие
+            action: 'entry.4315628'         // Действие
         };
         
         let tournaments = {};
@@ -1416,6 +1415,12 @@
                 console.error('Ошибка отправки в форму:', error);
                 return false;
             }
+        }
+
+        // Проверка, записан ли уже пользователь на эту дату
+        function isAlreadyRegistered(date, userId) {
+            const registrations = JSON.parse(localStorage.getItem('registrations') || '[]');
+            return registrations.some(reg => reg.date === date && reg.userId === userId);
         }
 
         // Обновление рейтинга
@@ -1694,7 +1699,7 @@
             document.getElementById('registerModal').classList.remove('active');
         };
 
-        // Подтверждение записи
+        // Подтверждение записи (с проверкой на дубли)
         window.confirmRegistration = async function() {
             if (!selectedDate) {
                 showNotification('Выберите дату');
@@ -1709,6 +1714,12 @@
             const user = tg.initDataUnsafe?.user;
             if (!user) {
                 showNotification('Ошибка: пользователь не определен');
+                return;
+            }
+            
+            // Проверяем, не записан ли уже
+            if (isAlreadyRegistered(selectedDate, user.id)) {
+                showNotification('Вы уже записаны на этот турнир');
                 return;
             }
             
@@ -1751,7 +1762,7 @@
             
             return allRegistrations.filter(reg => {
                 return reg.userId === user.id && new Date(reg.date) >= today;
-            });
+            }).sort((a, b) => new Date(a.date) - new Date(b.date));
         }
 
         function updateRegistrationsCount() {
