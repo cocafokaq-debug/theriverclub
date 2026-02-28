@@ -1303,13 +1303,13 @@
         // ССЫЛКА НА ФОРМУ
         const REGISTRATION_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSehhF1Pw6bh5hWZ4p_9UOZPmzxb0b4jq1EBhAg3-Xc1063Q8Q/formResponse';
         
-        // ID ПОЛЕЙ (все доступные ID)
+        // ===== ИСПРАВЛЕННЫЕ ID ПОЛЕЙ =====
         const FORM_FIELDS = {
-            id1: 'entry.1854315628',
-            id2: 'entry.1155959813',
-            id3: 'entry.406498245',
-            id4: 'entry.671432415',
-            id5: 'entry.1947153270'
+            date: 'entry.1854315628',      // Попадает в колонку B (Дата турнира)
+            telegramId: 'entry.1155959813',  // Попадает в колонку C (Telegram ID)
+            name: 'entry.406498245',        // Попадает в колонку D (Имя)
+            username: 'entry.671432415',    // Попадает в колонку E (Username)
+            action: 'entry.1947153270'      // Попадает в колонку F (Действие)
         };
         
         let tournaments = {};
@@ -1395,19 +1395,15 @@
             }
         }
 
-        // ТЕСТОВАЯ ОТПРАВКА С МЕТКАМИ
+        // Отправка в Google Forms (теперь с правильными ID)
         async function sendToGoogleForm(data) {
             try {
                 const formData = new FormData();
-                
-                // Отправляем МЕТКИ вместо реальных данных
-                formData.append(FORM_FIELDS.id1, 'МЕТКА_1');
-                formData.append(FORM_FIELDS.id2, 'МЕТКА_2');
-                formData.append(FORM_FIELDS.id3, 'МЕТКА_3');
-                formData.append(FORM_FIELDS.id4, 'МЕТКА_4');
-                formData.append(FORM_FIELDS.id5, 'МЕТКА_5');
-                
-                console.log('Отправляем тестовые метки...');
+                formData.append(FORM_FIELDS.date, data.date);
+                formData.append(FORM_FIELDS.telegramId, data.telegramId);
+                formData.append(FORM_FIELDS.name, data.name);
+                formData.append(FORM_FIELDS.username, data.username);
+                formData.append(FORM_FIELDS.action, data.action);
                 
                 await fetch(REGISTRATION_URL, {
                     method: 'POST',
@@ -1415,7 +1411,6 @@
                     body: formData
                 });
                 
-                showNotification('Тестовые данные отправлены! Проверь таблицу');
                 return true;
             } catch (error) {
                 console.error('Ошибка отправки в форму:', error);
@@ -1705,7 +1700,7 @@
             document.getElementById('registerModal').classList.remove('active');
         };
 
-        // Подтверждение записи (ТЕСТОВОЕ - отправляет метки)
+        // Подтверждение записи (теперь с реальными данными)
         window.confirmRegistration = async function() {
             if (!selectedDate) {
                 showNotification('Выберите дату');
@@ -1729,7 +1724,7 @@
                 return;
             }
             
-            // Отправляем ТЕСТОВЫЕ МЕТКИ в Google Forms
+            // Отправляем РЕАЛЬНЫЕ данные в Google Forms
             await sendToGoogleForm({
                 date: selectedDate,
                 telegramId: user.id.toString(),
@@ -1738,7 +1733,7 @@
                 action: 'запись'
             });
             
-            // Сохраняем локально (чтобы не записаться дважды)
+            // Сохраняем локально
             const registrations = JSON.parse(localStorage.getItem('registrations') || '[]');
             registrations.push({ 
                 date: selectedDate, 
@@ -1749,7 +1744,7 @@
             
             closeModal();
             updateRegistrationsCount();
-            showNotification('Тестовые данные отправлены! Проверь таблицу');
+            showNotification('Вы записаны на турнир!');
             
             tg.sendData(JSON.stringify({
                 action: 'registration',
@@ -1811,7 +1806,7 @@
             const user = tg.initDataUnsafe?.user;
             if (!user) return;
             
-            // Отправляем ТЕСТОВЫЕ МЕТКИ в Google Forms
+            // Отправляем отмену в Google Forms
             await sendToGoogleForm({
                 date: date,
                 telegramId: user.id.toString(),
@@ -1828,7 +1823,7 @@
             // Обновляем отображение
             updateRegistrationsCount();
             showMyRegistrations();
-            showNotification('Тест отмены отправлен');
+            showNotification('Запись отменена');
         };
 
         window.closeRegistrationsModal = function() {
