@@ -1304,13 +1304,13 @@
         const REGISTRATION_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSehhF1Pw6bh5hWZ4p_9UOZPmzxb0b4jq1EBhAg3-Xc1063Q8Q/formResponse';
         
         // ID ПОЛЕЙ (исправлено с учетом колонки "Отметка времени")
-        const FORM_FIELDS = {
-            date: 'entry.1854315628',      // Дата турнира (попадает в колонку C)
-            telegramId: 'entry.1155959813',   // Telegram ID (попадает в колонку D)
-            name: 'entry.406498245',         // Имя (попадает в колонку E)
-            username: 'entry.671432415',    // Username (попадает в колонку F)
-            action: 'entry.1947153270'       // Действие (попадает в колонку G)
-        };
+   const FORM_FIELDS = {
+    date: 'entry.1854315628',      // Это должно попадать в колонку B (дата турнира)
+    telegramId: 'entry.1155959813',  // Это должно попадать в колонку C (Telegram ID)
+    name: 'entry.406498245',        // Это должно попадать в колонку D (Имя)
+    username: 'entry.671432415',    // Это должно попадать в колонку E (Username)
+    action: 'entry.1947153270'      // Это должно попадать в колонку F (Действие)
+};
         
         let tournaments = {};
         let ratingData = [];
